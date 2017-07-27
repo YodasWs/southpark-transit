@@ -1,0 +1,101 @@
+body > main.no-pad {
+	padding: 0;
+}
+
+svg {
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+	max-width: 100%;
+	height: auto;
+	border: solid black;
+	border-width: 1px 0;
+}
+
+path {
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	fill: none;
+	transition: all 1s;
+}
+
+$stroke: 20px;
+$radius: 25;
+
+path.route {
+	stroke-width: $stroke;
+}
+path.outline {
+	stroke: black;
+	stroke-width: $stroke + 4;
+}
+
+circle {
+	stroke-width: $stroke;
+	stroke: #bbbbbb;
+	fill: none;
+	r: #{$radius}px;
+
+	&:first-child {
+		fill: white;
+	}
+}
+
+circle:first-child:nth-last-of-type(2),
+circle:first-child:nth-last-of-type(2) ~ circle {
+	stroke-dasharray: calc(2 * 3.14 * #{$radius} / 4);
+}
+
+circle:first-child:nth-last-of-type(2) ~ circle:nth-of-type(2) {
+	stroke-dashoffset: calc(2 * 3.14 * #{$radius} / 4);
+}
+
+circle:first-child:nth-last-of-type(3),
+circle:first-child:nth-last-of-type(3) ~ circle {
+	stroke-dasharray: calc(2 * 3.14 * #{$radius} / 6) calc(2 * 3.14 * #{$radius} / 6 * 2);
+}
+
+circle:first-child:nth-last-of-type(3) ~ circle:nth-of-type(2) {
+	stroke-dashoffset: calc(2 * 3.14 * #{$radius} / 6);
+}
+
+circle:first-child:nth-last-of-type(3) ~ circle:nth-of-type(3) {
+	stroke-dashoffset: calc(2 * 3.14 * #{$radius} / 6 * 2);
+}
+
+circle.gold,
+g.gold path.route {
+	stroke: gold;
+}
+
+circle.blue,
+g.blue path.route {
+	stroke: blue;
+}
+
+circle.south-line,
+g.south-line path.route {
+	stroke: orange;
+}
+
+circle.west-line,
+g.west-line path.route {
+	stroke: #00A1DE;
+}
+
+circle.east-line,
+g.east-line path.route {
+	stroke: #9364CC;
+}
+
+circle.green,
+g.green path.route {
+	stroke: #6cbe45;
+}
+
+text {
+	font-family: "Trebuchet MS", "Open Sans", sans-serif;
+	transition: all 500ms;
+	cursor: default;
+	font-size: 45px;
+}
