@@ -1,0 +1,13 @@
+[ng-view="pageParking"] {
+	p {
+		max-width: 800px;
+		text-indent: 5em;
+		margin-right: auto;
+		margin-left: auto;
+
+		em {
+			text-decoration: underline;
+			font-style: normal;
+		}
+	}
+}
