@@ -43,25 +43,29 @@ const argv = require('yargs')
 	.argv
 
 const gulp = require('gulp'),
-	cli = require('gulp-run-command').default,
 	path = require('path'),
+	fileExists = require('file-exists'),
 
-plugins = {
-	server: require('gulp-webserver'),
-	prefixCSS: require('gulp-autoprefixer'),
-	sourcemaps: require('gulp-sourcemaps'),
-	compileHTML: require('gulp-htmlmin'),
-	lintHTML: require('gulp-html-lint'),
-	lintSass: require('gulp-sass-lint'),
-	rmLines: require('gulp-rm-lines'),
-	compileSass: require('gulp-sass'),
-	compileJS: require('gulp-babel'),
-	concat: require('gulp-concat'),
-	lintES: require('gulp-eslint'),
-	newFile: require('gulp-file'),
-	sort: require('gulp-order'),
-	ssi: require('gulp-ssi'),
-},
+plugins = require('gulp-load-plugins')({
+	rename:{
+		'gulp-autoprefixer': 'prefixCSS',
+		'gulp-run-command': 'cli',
+		'gulp-html-lint': 'lintHTML',
+		'gulp-sass-lint': 'lintSass',
+		'gulp-webserver': 'server',
+		'gulp-htmlmin': 'compileHTML',
+		'gulp-eslint': 'lintES',
+		'gulp-babel': 'compileJS',
+		'gulp-order': 'sort',
+		'gulp-sass': 'compileSass',
+		'gulp-file': 'newFile',
+	},
+	postRequireTransforms:{
+		cli(cli) {
+			return cli.default
+		},
+	},
+}),
 
 options = {
 	compileJS:{
@@ -75,11 +79,18 @@ options = {
 		],
 		presets: [
 			'es2015',
-			'react',
 		]
 	},
 	compileSass:{
-		outputStyle: 'compressed'
+		importer: require('@mightyplow/sass-dedup-importer'),
+		outputStyle: 'compressed',
+		includePaths: [
+			'node_modules',
+			'src/scss',
+		],
+	},
+	stripCssComments:{
+		preserve: false,
 	},
 	compileHTML:{
 		collapseWhitespace: true,
@@ -149,7 +160,7 @@ options = {
 'no-invalid-hex': 1,
 'no-mergeable-selectors': 1,
 'no-misspelled-properties': 1,
-'no-qualifying-elements': 1,
+'no-qualifying-elements': 0,
 'no-trailing-whitespace': 1,
 'no-trailing-zero': 1,
 'no-transition-all': 0,
@@ -160,9 +171,9 @@ options = {
 'no-warn': 1,
 'property-units': 1,
 'declarations-before-nesting': 1,
-'force-attribute-nesting': 1,
+'force-attribute-nesting': 0,
 'force-element-nesting': 0,
-'force-pseudo-nesting': 1,
+'force-pseudo-nesting': 0,
 'class-name-format': 1,
 'function-name-format': 1,
 'id-name-format': 1,
@@ -178,7 +189,9 @@ options = {
 'hex-length': [
 	2, { style: 'long' }
 ],
-'hex-notation': 1,
+'hex-notation': [
+	1, { style: 'uppercase' }
+],
 'indentation': [
 	2, { size: 'tab' }
 ],
@@ -187,7 +200,9 @@ options = {
 ],
 'max-line-length': 0,
 'max-file-line-count': 1,
-'nesting-depth': 1,
+'nesting-depth': [
+	1, { "max-depth": 4 }
+],
 'property-sort-order': 0,
 'pseudo-element': 1,
 'quotes': 1,
@@ -212,12 +227,12 @@ options = {
 		useHtmllintrc: false,
 		rules: {
 
-'attr-name-style': false,
+'attr-name-style': 'dash',
 'attr-no-dup': true,
 'attr-req-value': false,
 'attr-bans':false,
-'class-name-style': 'dash',
 'class-no-dup': true,
+'class-style': 'dash',
 'doctype-html5': true,
 'fig-req-figcaption': false,
 'head-req-title': true,
@@ -240,8 +255,8 @@ options = {
 	'style',
 ],
 'tag-close': true,
-'tag-name-lowercase': false,
-'tag-name-match': false,
+'tag-name-lowercase': true,
+'tag-name-match': true,
 'tag-self-close': 'always',
 'title-no-dup': true,
 
@@ -261,10 +276,17 @@ options = {
 	},
 	dest: 'docs/',
 	rmLines:{
-		filters:[
-			/^[\'"]use strict[\'"];$/,
-			/^\s*$/
-		]
+		css:{
+			filters:[
+				/^\s*$/,
+			]
+		},
+		js:{
+			filters:[
+				/^[\'"]use strict[\'"];$/,
+				/^\s*$/,
+			]
+		},
 	},
 	concat:{
 		css:{
@@ -280,12 +302,12 @@ options = {
 		directoryListing: false,
 		defaultFile: 'index.html',
 		fallback: 'index.html',
-		// Ugh, can't watch on Windows yet >_<
 		livereload: true,
 		port: argv.port,
 	},
 	sort:{
 		css:[
+			'scss/**/*.{sa,sc,c}ss',
 			'main.scss',
 			'components/**/*.{sa,sc,c}ss',
 			'**/*.{sa,sc,c}ss',
@@ -343,16 +365,18 @@ function runTasks(task) {
 		name: 'compile:sass',
 		src: [
 			'src/**/*.{sa,sc,c}ss',
+			'!src/scss/*.{sa,sc,c}ss',
 			'!**/*.min.css',
 			'!**/min.css'
 		],
 		tasks: [
 			'lintSass',
-			'compileSass',
-			'prefixCSS',
 			'sort',
 			'concat',
+			'compileSass',
+			'stripCssComments',
 			'rmLines',
+			'prefixCSS',
 		],
 		fileType: 'css'
 	},
@@ -439,16 +463,14 @@ gulp.task('transfer:res', () => {
 	return gulp.src([
 		'./node_modules/angular/angular.min.js{,.map}',
 		'./node_modules/angular-route/angular-route.min.js{,.map}',
+		'./node_modules/jquery/dist/jquery.min.{js,map}',
 	])
 		.pipe(gulp.dest(path.join(options.dest, 'res')))
 })
 
 gulp.task('transfer-files', gulp.parallel('transfer:assets', 'transfer:res'))
 
-gulp.task('compile', gulp.series(
-	'lint',
-	gulp.parallel('compile:html', 'compile:js', 'compile:sass', 'transfer-files')
-))
+gulp.task('compile', gulp.parallel('compile:html', 'compile:js', 'compile:sass', 'transfer-files'))
 
 gulp.task('watch', () => {
 	gulp.watch('./src/**/*.{sa,sc,c}ss', gulp.series('compile:sass'))
@@ -462,8 +484,9 @@ gulp.task('serve', () => {
 })
 
 gulp.task('generate:page', gulp.series(
-	cli([
+	plugins.cli([
 		`mkdir -pv ./src/pages/${argv.name}`,
+		`touch -a ./src/pages/${argv.name}/${argv.name}.html`,
 		`touch -a ./src/pages/${argv.name}/${argv.name}.scss`,
 	]),
 	() => {
@@ -480,7 +503,7 @@ gulp.task('generate:page', gulp.series(
 		const str = `'use strict';\n
 angular.module('${camelCase('page-'+argv.name)}')
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-	$routeProvider.when('/${argv.name}', {
+	$routeProvider.when('/${argv.name}/', {
 		templateUrl: 'pages/${argv.name}/${argv.name}.html',
 	})
 }])\n`
@@ -488,13 +511,13 @@ angular.module('${camelCase('page-'+argv.name)}')
 			.pipe(gulp.dest(`./src/pages/${argv.name}`))
 	},
 	// TODO: Add to app.module.js
-	cli([
+	plugins.cli([
 		`git status`,
 	])
 ))
 
 gulp.task('generate:component', gulp.series(
-	cli([
+	plugins.cli([
 		`mkdir -pv src/components/${argv.name}`,
 		`touch -a src/components/${argv.name}/${argv.name}.html`,
 		`touch -a src/components/${argv.name}/${argv.name}.scss`,
@@ -516,14 +539,15 @@ angular.module('${camelCase('comp-'+argv.name)}')
 			.pipe(gulp.dest(`./src/components/${argv.name}`))
 	},
 	// TODO: Add to app.module.js
-	cli([
+	plugins.cli([
 		`git status`,
 	])
 ))
 
 gulp.task('default', gulp.series(
+	'lint',
 	'compile',
 	'serve'
-	// Ugh, can't watch on Windows yet >_<
-	,'watch'
+	// Bash on Windows can't do watch=>compile and livereload at the same time >_<
+//	,'watch'
 ))
