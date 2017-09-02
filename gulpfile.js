@@ -1,7 +1,7 @@
 /**
  * Sam Grundman's Super Awesome Gulp Web Development Toolset
  *
- * @version 1.0.4
+ * @version 1.0.4.2
  */
 'use strict';
 
@@ -219,13 +219,15 @@ options = {
 	2, { include: true }
 ],
 'max-line-length': 0,
-'max-file-line-count': 1,
+'max-file-line-count': 0,
 'nesting-depth': [
 	1, { "max-depth": 4 }
 ],
 'property-sort-order': 0,
 'pseudo-element': 1,
-'quotes': 1,
+'quotes': [
+	1, { style: 'double' }
+],
 'shorthand-values': 1,
 'url-quotes': 1,
 'variable-for-property': 1,
