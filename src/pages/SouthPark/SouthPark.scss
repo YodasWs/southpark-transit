@@ -25,6 +25,7 @@ $radius: 25;
 path.route {
 	stroke-width: $stroke;
 }
+
 path.outline {
 	stroke: black;
 	stroke-width: $stroke + 4;
@@ -32,7 +33,7 @@ path.outline {
 
 circle {
 	stroke-width: $stroke;
-	stroke: #bbbbbb;
+	stroke: #BBBBBB;
 	fill: none;
 	r: #{$radius}px;
 
@@ -90,7 +91,7 @@ g.east-line path.route {
 
 circle.green,
 g.green path.route {
-	stroke: #6cbe45;
+	stroke: #6CBE45;
 }
 
 text {

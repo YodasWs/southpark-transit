@@ -1,23 +1,16 @@
 'use strict';
 
-angular.module('pageParking')
-.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-	$routeProvider.when('/parking', {
-		templateUrl: 'pages/parking/parking.html',
-		controller: 'ctrlParking',
+angular.module('pageSouthParkParking')
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/SouthPark/parking', {
+		templateUrl: 'pages/SouthPark/parking/parking.html',
+		controller: 'ctrlSouthParkParking',
 		controllerAs: '$ctrl',
 	})
 }])
-.controller('ctrlParking', function() {
-	angular.element('[ng-view]').attr('ng-view', 'pageParking')
+.controller('ctrlSouthParkParking', function() {
+	angular.element('[ng-view]').attr('ng-view', 'pageSouthParkParking')
 	// Google Static Maps Guide: https://developers.google.com/maps/documentation/static-maps/intro
-	let opts = {
-		key: 'AIzaSyBnow4ZVuX0dXXj8c0o_OinH0SBZbujPqg',
-		center: 'SouthPark, Charlotte NC',
-		maptype: 'hybrid',
-		size: '600x500',
-		zoom: 5,
-	}
 
 	this.mapFeatures = {
 		markers: [

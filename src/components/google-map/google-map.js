@@ -22,11 +22,15 @@ angular.module('compGoogleMap')
 		// Compile URL
 		for (let p in this.features) {
 			if (!opts[p]) opts[p] = []
-			this.features[p].forEach((m) => {
-				opts[p].push(m.join('|'))
-			})
-			if (opts[p].length) {
-				delete opts.center
+			if (typeof this.features[p].forEach === 'function') {
+				this.features[p].forEach((m) => {
+					opts[p].push(m.join('|'))
+				})
+				if (opts[p].length) {
+					delete opts.center
+				}
+			} else {
+				opts[p] = this.features[p]
 			}
 		}
 		let params = []

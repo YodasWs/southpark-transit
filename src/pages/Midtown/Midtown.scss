@@ -1,0 +1,23 @@
+[ng-view="pageMidtown"] {
+	p {
+		max-width: 800px;
+		margin-right: auto;
+		margin-left: auto;
+
+		em {
+			text-decoration: underline;
+			font-style: normal;
+		}
+	}
+
+	> img {
+		display: block;
+		margin: 1em auto;
+		max-width: 100%;
+	}
+
+	google-map > img {
+		max-width: 600px;
+		width: 100%;
+	}
+}

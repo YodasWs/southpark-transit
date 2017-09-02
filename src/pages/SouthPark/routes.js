@@ -1,8 +1,14 @@
 'use strict';
 
-angular.module('pageHome', [
-])
-.controller('ctrlSVG', ['$scope', '$interpolate', ($s, $i) => {
+angular.module('pageSouthPark')
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/SouthPark', {
+		templateUrl: 'pages/SouthPark/SouthPark.html',
+		controller: 'ctrlSouthPark',
+		controllerAs: '$ctrl',
+	})
+}])
+.controller('ctrlSouthPark', ['$scope', '$interpolate', ($s, $i) => {
 	angular.element('[ng-view]').addClass('no-pad')
 	// Display Settings
 	$s.distance = {

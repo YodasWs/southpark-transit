@@ -2,16 +2,12 @@
 
 angular.module('myApp', [
 	'compGoogleMap',
-	'pageParking',
-	'pageHome',
+	'pageSouthPark',
+	'pageSouthParkParking',
+	'pageMidtown',
 	'ngRoute',
 ])
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-	$locationProvider.html5Mode(true);
-	$routeProvider.when('/', {
-		templateUrl: 'pages/home.html',
-		controller: 'ctrlSVG',
-		controllerAs: '$ctrl',
-	})
-	.otherwise({redirectTo: '/'})
+	$locationProvider.html5Mode(false);
+	$routeProvider.otherwise({redirectTo: '/SouthPark'})
 }])
