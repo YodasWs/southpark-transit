@@ -5,6 +5,7 @@ angular.module('myApp', [
 	'pageSouthPark',
 	'pageSouthParkParking',
 	'pageMidtown',
+	'directives',
 	'ngRoute',
 ])
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

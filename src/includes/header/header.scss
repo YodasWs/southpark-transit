@@ -1,5 +1,4 @@
 body > header {
-	background: honeydew;
 	background: lightgreen;
 
 	h1 {
@@ -11,4 +10,72 @@ body > nav {
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: space-between;
+	align-content: flex-start;
+	align-items: flex-start;
+	list-style: none;
+
+	%nav-link {
+		padding: 4px 10px;
+	}
+
+	a {
+		@extend %nav-link;
+	}
+
+	> * {
+		display: block;
+		border: 1px solid transparent;
+		text-align: center;
+		padding: 2px 5px;
+		flex-grow: 1;
+
+		&:hover,
+		&.expand {
+			// border-color: black;
+			background: whitesmoke;
+		}
+	}
+
+	> li {
+		@extend %nav-link;
+		position: relative;
+		cursor: pointer;
+
+		a {
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+
+		> ul {
+			display: none;
+			display: flex;
+			padding: 0;
+			margin: 0;
+			min-width: 100%;
+			list-style: none;
+			position: absolute;
+			left: 0;
+			top: 100%;
+			background: inherit;
+			flex-flow: column nowrap;
+			justify-content: flex-start;
+			align-items: stretch;
+			text-align: left;
+			overflow: hidden;
+			max-height: 0;
+			transition: all 200ms;
+		}
+
+		&:hover,
+		&.expand {
+
+			> ul {
+				// border: 1px solid black;
+				// background: whitesmoke;
+				border-top: 0 none;
+				overflow: auto;
+			}
+		}
+	}
 }
