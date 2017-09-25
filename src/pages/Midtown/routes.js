@@ -41,10 +41,7 @@ angular.module('pageMidtown')
 				'35.191460,-80.823684', // Providence Rd & Cherokee Rd
 				'35.177654,-80.817861', // Providence Rd & S Wendover Rd
 				'35.171268,-80.808254', // Sharon Ln & Providence Rd
-				'35.172665,-80.805914', // S Sharon Amity Rd & Crosby Rd
-				'35.171839,-80.805297', // Crosby Rd & Orient Rd
 				'35.170430,-80.807229', // Orient Rd & Providence Rd
-				'35.171268,-80.808254', // Sharon Ln & Providence Rd
 			],
 		],
 		markers: [
@@ -57,10 +54,12 @@ angular.module('pageMidtown')
 				'size:small',
 				'35.215915,-80.832748', // S Kings Dr
 				'35.213229,-80.830223', // 3rd St before Torrence St
-				'35.210629,-80.827172', // 3rd St after Hawthorne Ln
-				'35.206002,-80.824158', // Providence Rd and Alberto St
+				'35.210629,-80.827172', // 3rd St after Queens Rd
+				'35.207988,-80.824430', // Providence Rd before S Colonial Ave
+				'35.205497,-80.824167', // Providence Rd and Alberto St
 				'35.202360,-80.824920', // Providence Rd after Cherokee Rd
-				'35.196657,-80.826906', // Providence Rd btwn Huntley Pl and Perrin Pl
+				'35.198687,-80.826056', // Providence Rd at Cottage Pl
+				'35.195220,-80.826632', // Providence Rd after Queens Rd
 			],
 		],
 	}
